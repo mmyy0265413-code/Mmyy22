@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>عرض مزدوج</title>
+<style>
+  :root {
+    --bg: #14171c;
+    --bar: #1d2128;
+    --line: #2c323c;
+    --text: #e8ebf0;
+    --muted: #8d97a6;
+    --accent: #3b82f6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", Arial, sans-serif;
+    display: flex;
+  }
+  .split {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: 2px;
+    background: var(--line);
+  }
+  .pane {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bar);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .title { font-size: 14px; font-weight: 600; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .url { font-size: 11px; color: var(--muted); direction: ltr; max-width: 38%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .btn {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn:hover { background: #262c35; }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  iframe {
+    flex: 1;
+    width: 100%;
+    border: 0;
+    background: #fff;
+  }
+  /* وضع التركيز: يعرض نافذة واحدة بكامل الشاشة */
+  .split.focus-a .pane:nth-child(2),
+  .split.focus-b .pane:nth-child(1) { display: none; }
+
+  @media (max-width: 800px) {
+    .split { flex-direction: column; }
+    .url { display: none; }
+    .btn { padding: 6px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<main class="split" id="split">
+
+  <section class="pane">
+    <div class="bar">
+      <span class="title">الرابط الأول</span>
+      <span class="url">lltrco.com/?r=mahmoudyoussef20</span>
+      <button class="btn" data-reload="a">تحديث</button>
+      <button class="btn" data-focus="a" id="fa">تكبير</button>
+      <a class="btn" target="_blank" rel="noopener" href="https://lltrco.com/?r=mahmoudyoussef20">فتح في تبويب</a>
+    </div>
+    <iframe id="a" title="الرابط الأول" src="https://lltrco.com/?r=mahmoudyoussef20" loading="eager" allow="fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </section>
+
+  <section class="pane">
+    <div class="bar">
+      <span class="title">الرابط الثاني</span>
+      <span class="url">lltrco.com/?r=mahmoudyoussef2024</span>
+      <button class="btn" data-reload="b">تحديث</button>
+      <button class="btn" data-focus="b" id="fb">تكبير</button>
+      <a class="btn" target="_blank" rel="noopener" href="https://lltrco.com/?r=mahmoudyoussef2024">فتح في تبويب</a>
+    </div>
+    <iframe id="b" title="الرابط الثاني" src="https://lltrco.com/?r=mahmoudyoussef2024" loading="eager" allow="fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </section>
+
+</main>
+
+<script>
+  const split = document.getElementById('split');
+
+  document.querySelectorAll('[data-reload]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const f = document.getElementById(btn.dataset.reload);
+      f.src = f.src;
+    });
+  });
+
+  document.querySelectorAll('[data-focus]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const side = btn.dataset.focus;
+      const cls = 'focus-' + side;
+      const on = split.classList.contains(cls);
+      split.classList.remove('focus-a', 'focus-b');
+      document.getElementById('fa').textContent = 'تكبير';
+      document.getElementById('fb').textContent = 'تكبير';
+      if (!on) {
+        split.classList.add(cls);
+        btn.textContent = 'تصغير';
+      }
+    });
+  });
+</script>
+
+</body>
+  </html>
